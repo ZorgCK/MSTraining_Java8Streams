@@ -31,7 +31,9 @@ public class BookController
 	@Get
 	public List<Book> getBook()
 	{
-		return DB.root.getBooks();
+		// return DB.root.getBooks().stream().sorted(Comparator.comparing(Book::getName)).collect(Collectors.toList());
+		return DB.root.getBooks().stream().sorted((b1, b2) -> b2.getPrice().compareTo(b1.getPrice())).collect(
+			Collectors.toList());
 	}
 	
 	@Get("/byTitlePredicate")

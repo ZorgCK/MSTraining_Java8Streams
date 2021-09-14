@@ -1,7 +1,9 @@
 package one.microstream.controller;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -10,6 +12,7 @@ import java.util.stream.Stream;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
+import one.microstream.domain.Author;
 import one.microstream.domain.Book;
 import one.microstream.storage.DB;
 
@@ -79,5 +82,25 @@ public class StreamsController
 	public Book findFirst()
 	{
 		return DB.root.getBooks().stream().findFirst().get();
+	}
+	
+	@Get("/bookspricesum")
+	public BigDecimal booksPriceSum()
+	{
+		BigDecimal collect =
+			DB.root.getBooks().stream().collect(Collectors.reducing(BigDecimal.ZERO, Book::getPrice, BigDecimal::add));
+		
+		return collect;
+	}
+	
+	@Get("/booksgrouppricesum")
+	public Map<Author, BigDecimal> booksGroupPriceSum()
+	{
+		Map<Author, BigDecimal> collect = DB.root.getBooks().stream().collect(
+			Collectors.groupingBy(
+				Book::getAuthor,
+				Collectors.reducing(BigDecimal.ZERO, Book::getPrice, BigDecimal::add)));
+		
+		return collect;
 	}
 }
