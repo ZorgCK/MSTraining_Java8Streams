@@ -1,8 +1,6 @@
 package one.microstream.controller;
 
 import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Controller;
@@ -37,25 +35,19 @@ public class BookController
 	@Get("/byTitlePredicate")
 	public List<Book> getBooksbyTitlePredicate()
 	{
-		Predicate<Book> namePredicate = b -> b.getName().equals("Bangkok Dangerous");
-		Predicate<Book> isbnPredicate = b -> b.getIsbn().equals("12345");
-		Predicate<Book> nameAndISBNPredicate = namePredicate.and(isbnPredicate);
 		
-		return DB.root.getBooks().stream().filter(nameAndISBNPredicate).collect(
-			Collectors.toList());
 	}
 	
 	@Get("/byTitle")
 	public List<Book> getBooksbyTitle()
 	{
-		return DB.root.getBooks().stream().filter(b -> b.getName().equals("Bangkok Dangerous")).collect(
-			Collectors.toList());
+		
 	}
 	
 	@Get("/startsWith_A")
 	public List<Book> getBooksWithA()
 	{
-		return DB.root.getBooks().stream().filter(b -> b.getName().startsWith("A")).collect(Collectors.toList());
+		
 	}
 	
 	@Get("/clear")
@@ -70,17 +62,12 @@ public class BookController
 	@Get("/authorList")
 	public List<Author> getAllAuthors()
 	{
-		List<Author> collect = DB.root.getBooks().stream().map(c -> c.getAuthor()).collect(Collectors.toList());
 		
-		return collect;
 	}
 	
 	@Get("/addressList")
 	public List<Address> getAllAddresses()
 	{
-		List<Address> addresses =
-			getAllAuthors().stream().flatMap(a -> a.getAddresses().stream()).collect(Collectors.toList());
 		
-		return addresses;
 	}
 }
